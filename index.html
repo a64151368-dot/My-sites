@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBE8EE">
+<title>Сайти-навігатори</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Raleway:wght@400;500;600;700&family=Marck+Script&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--pink:#FBE8EE;--pink-light:#FFF5F7;--pink-deep:#E8B9C8;--brown:#70452F;--brown-light:#946344;--text:#59483F;--rose:#C78DA2}
+html{min-height:100%;background:var(--pink)}
+body{font-family:'Raleway',sans-serif;min-height:100vh;color:var(--text);background:
+radial-gradient(ellipse 60% 52% at 8% 16%,rgba(244,196,211,.55),transparent 70%),
+radial-gradient(ellipse 56% 58% at 92% 82%,rgba(255,216,226,.72),transparent 68%),var(--pink);
+position:relative;overflow-x:hidden}
+.page{position:relative;z-index:2;max-width:850px;margin:0 auto;padding:32px 18px 48px}
+.header{text-align:center;margin-bottom:24px}
+.brand-icon{width:62px;height:54px;display:block;margin:0 auto 8px}
+.header h1{font-family:'Marck Script',cursive;font-weight:400;font-size:clamp(2.8rem,7vw,4.15rem);line-height:1.12;margin-bottom:12px;color:var(--brown);text-shadow:0 1px 0 rgba(255,255,255,.7),0 4px 12px rgba(112,69,47,.15)}
+.header-desc{max-width:690px;margin:0 auto 20px;font-size:1.03rem;line-height:1.7;color:#74594D;font-weight:500}
+.section-intro{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.65rem;color:var(--brown);margin:0 auto 10px;line-height:1.3}
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(112,69,47,.36),transparent)}
+.divider-dot{width:8px;height:8px;border-radius:50%;background:#B98770;box-shadow:0 0 9px rgba(112,69,47,.28)}
+.links-list{display:flex;flex-direction:column;background:rgba(255,255,255,.44);border:1px solid rgba(112,69,47,.15);border-radius:22px;padding:7px 20px;box-shadow:0 14px 36px rgba(135,84,100,.10);backdrop-filter:blur(4px)}
+.link-card{display:flex;align-items:center;gap:14px;padding:18px 7px;text-decoration:none;color:inherit;border-bottom:1px solid rgba(112,69,47,.17);transition:padding-left .22s ease,background .22s ease,transform .22s ease;border-radius:10px}
+.link-card:last-child{border-bottom:none}
+.link-card:hover{padding-left:15px;background:rgba(255,255,255,.58);transform:translateY(-1px)}
+.link-symbol{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#FFF7F9,#F3D4DE);border:1px solid rgba(112,69,47,.12);color:var(--brown);box-shadow:0 7px 16px rgba(112,69,47,.11),inset 0 1px 0 rgba(255,255,255,.85)}
+.link-symbol svg{width:25px;height:25px}
+.link-body{flex:1;min-width:0}
+.link-name{font-family:'Marck Script',cursive;font-size:clamp(1.65rem,4vw,2.05rem);line-height:1.25;color:var(--brown);display:block;transition:color .2s}
+.link-card:hover .link-name{color:var(--brown-light)}
+.link-arrow{font-size:1.45rem;color:#B98770;flex-shrink:0;transition:transform .2s,color .2s}
+.link-card:hover .link-arrow{transform:translateX(4px);color:var(--brown)}
+/* Об’ємні геометричні фігури, що плавно рухаються по краях сторінки */
+.floating-shapes{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.shape{position:absolute;bottom:-180px;display:block;opacity:0;will-change:transform,opacity;animation:float-shape var(--duration,28s) linear var(--delay,0s) infinite;filter:drop-shadow(0 0 12px rgba(199,141,162,.32))}
+.shape.pyramid{width:0;height:0;border-left:var(--half,34px) solid transparent;border-right:var(--half,34px) solid transparent;border-bottom:var(--height,68px) solid rgba(205,151,171,.42);filter:drop-shadow(0 0 10px rgba(199,141,162,.42))}
+.shape.cone{width:0;height:0;border-left:var(--half,30px) solid transparent;border-right:var(--half,30px) solid transparent;border-bottom:var(--height,78px) solid rgba(221,168,187,.48);border-radius:48% 48% 12% 12%;filter:drop-shadow(0 0 11px rgba(199,141,162,.42))}
+.shape.box3d{width:var(--size,58px);height:var(--size,58px);border:1px solid rgba(155,106,118,.38);border-radius:5px;background:linear-gradient(135deg,rgba(255,255,255,.52),rgba(218,163,183,.32));box-shadow:inset -12px -8px 0 rgba(174,119,142,.14),inset 10px 7px 0 rgba(255,255,255,.22);transform-style:preserve-3d}
+.shape.box3d::before{content:"";position:absolute;left:8px;right:-9px;top:-10px;height:9px;transform:skewX(-42deg);transform-origin:bottom;background:rgba(232,190,205,.5);border:1px solid rgba(155,106,118,.25)}
+.shape.box3d::after{content:"";position:absolute;top:-5px;right:-10px;bottom:5px;width:9px;transform:skewY(-42deg);transform-origin:left;background:rgba(174,119,142,.3);border:1px solid rgba(155,106,118,.22)}
+@keyframes float-shape{0%{transform:translate3d(0,0,0) rotate(-8deg) scale(1.18);opacity:0}8%{opacity:.76}25%{transform:translate3d(calc(var(--drift,16px)*.45),-28vh,0) rotate(82deg) scale(.96);opacity:.7}50%{transform:translate3d(var(--drift,16px),-58vh,0) rotate(165deg) scale(.73);opacity:.62}75%{transform:translate3d(calc(var(--drift,16px)*.5),-88vh,0) rotate(235deg) scale(.52);opacity:.48}92%{opacity:.3}100%{transform:translate3d(calc(var(--drift,16px)*-1),-122vh,0) rotate(310deg) scale(.34);opacity:0}}
+/* Прозорі плашки з назвами — без зміни переходів за посиланнями */
+.links-list{background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none}
+.link-card{background:transparent}
+.link-card:hover{background:rgba(255,255,255,.22)}
+.link-symbol{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(243,212,222,.92));border:1px solid rgba(112,69,47,.16);color:var(--brown);box-shadow:0 7px 18px rgba(112,69,47,.11),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
+.link-symbol svg{width:26px;height:26px;stroke-linecap:round;stroke-linejoin:round}
+.link-card:hover .link-symbol{transform:translateY(-2px) scale(1.05);background:linear-gradient(145deg,#fff,#F0C9D6);box-shadow:0 9px 20px rgba(112,69,47,.16)}
+@media(max-width:600px){.page{padding:24px 13px 36px}.header-desc{font-size:.98rem}.links-list{padding:5px 12px}.link-card{padding:15px 3px;gap:10px}.link-symbol{width:36px;height:36px;flex-basis:36px}.link-name{font-size:1.55rem}.shape{transform-origin:center}.shape.pyramid,.shape.cone{border-left-width:22px;border-right-width:22px;border-bottom-width:48px}.shape.box3d{--size:38px}}
+@media(prefers-reduced-motion:reduce){.shape{animation:none;display:none}.link-card,.link-arrow,.link-name{transition:none}}
+</style>
+</head>
+<body>
+<div class="floating-shapes" aria-hidden="true">
+  <span class="shape pyramid" style="left:3%;--half:38px;--height:76px;--duration:29s;--delay:-4s;--drift:18px"></span>
+  <span class="shape cone" style="left:9%;--half:31px;--height:78px;--duration:33s;--delay:-17s;--drift:-14px"></span>
+  <span class="shape box3d" style="left:2%;--size:58px;--duration:35s;--delay:-22s;--drift:12px"></span>
+  <span class="shape pyramid" style="left:13%;--half:25px;--height:52px;--duration:31s;--delay:-11s;--drift:16px"></span>
+  <span class="shape box3d" style="left:7%;--size:42px;--duration:37s;--delay:-28s;--drift:-12px"></span>
+  <span class="shape cone" style="left:83%;--half:36px;--height:90px;--duration:32s;--delay:-8s;--drift:-16px"></span>
+  <span class="shape pyramid" style="left:91%;--half:30px;--height:62px;--duration:34s;--delay:-19s;--drift:14px"></span>
+  <span class="shape box3d" style="left:95%;--size:54px;--duration:38s;--delay:-25s;--drift:-13px"></span>
+  <span class="shape cone" style="left:77%;--half:25px;--height:63px;--duration:33s;--delay:-12s;--drift:15px"></span>
+  <span class="shape box3d" style="left:87%;--size:39px;--duration:36s;--delay:-30s;--drift:-15px"></span>
+</div>
+<main class="page">
+  <header class="header">
+    <svg class="brand-icon" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="17" y="13" width="86" height="62" rx="9" fill="#F8DDE6" stroke="#9B6A76" stroke-width="3"/>
+      <path d="M29 29H91M29 42H79M29 55H67" stroke="#B78392" stroke-width="4" stroke-linecap="round"/>
+      <path d="M48 76V87M72 76V87M39 88H81" stroke="#70452F" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="88" cy="55" r="7" fill="#D7A9B8"/>
+    </svg>
+    <h1>Сайти-навігатори</h1>
+  </header>
+  <div class="divider"><span class="divider-dot"></span></div>
+  <nav class="links-list" aria-label="Сайти-навігатори">
+    <a class="link-card" href="https://www.thinglink.com/scene/2064754369428980580" target="_blank" rel="noopener noreferrer">
+      <span class="link-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 6.5 9 3l6 3.5L21 3v14.5L15 21l-6-3.5L3 21V6.5Z" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round"/><path d="M9 3v14.5M15 6.5V21" stroke="currentColor" stroke-width="1.65"/><circle cx="12" cy="9" r="2" fill="#C78DA2"/></svg></span>
+      <span class="link-body"><span class="link-name">Віртуальні тури Україною</span></span><span class="link-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="link-card" href="https://a64151368-dot.github.io/Laba-10/" target="_blank" rel="noopener noreferrer">
+      <span class="link-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 3h6M10 3v6l-5 9.2A2 2 0 0 0 6.8 21h10.4a2 2 0 0 0 1.8-2.8L14 9V3" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 15h8M10 12h4" stroke="#C78DA2" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <span class="link-body"><span class="link-name">Фізична лабораторія 10</span></span><span class="link-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="link-card" href="https://a64151368-dot.github.io/Match-9/" target="_blank" rel="noopener noreferrer">
+      <span class="link-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 14.2 8l5.8 2-5.8 2L12 17.5 9.8 12 4 10l5.8-2L12 2.5Z" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round"/><path d="m19 15 1.1 2.5L22.5 19l-2.4 1.1L19 22.5l-1.1-2.4L15.5 19l2.4-1.5L19 15Z" fill="#C78DA2"/></svg></span>
+      <span class="link-body"><span class="link-name">Магічний курс «Математика 9»</span></span><span class="link-arrow" aria-hidden="true">→</span>
+    </a>
+  </nav>
+</main>
+</body>
+</html>
