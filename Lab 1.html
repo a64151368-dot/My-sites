@@ -1,0 +1,764 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Королівство Дрібноцарство</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&family=Nunito:wght@500;700;800;900&family=Pangolin&family=Rubik:wght@600;800;900&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* Layout: storybook — the magic workshop (virtual bench) pinned on the left, story chapters scroll on the right; stacks on phones.
+   Deliberately single bright storybook theme; every color set explicitly. */
+:root{
+  color-scheme: light;
+  --night:#E7E0FF; --night2:#F4F0FF; --paper:#FFF9EC; --ink:#2B1F4A; --muted:#62577F;
+  --royal:#6C4BD8; --rose:#FF7AA8; --pea:#79BF3F; --gold:#FFC23D; --sky:#9FD8FF; --berry:#E5484D; --ok:#1F9D63;
+  --wood:#E9B97A; --wood2:#D59E5C;
+  --f-title:"Lobster","Rubik",cursive;
+  --f-display:"Rubik","Nunito",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Pangolin","Nunito",cursive;
+  --r:18px; --sh:4px 4px 0 var(--ink);
+}
+*{box-sizing:border-box}
+body{background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:radial-gradient(circle at 20% 30%,var(--night2) 2px,transparent 3px),radial-gradient(circle at 70% 80%,#fff 1.5px,transparent 2.5px);background-size:34px 34px,52px 52px}
+.wrap{max-width:1380px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 60px}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--royal);outline-offset:2px}
+
+.hero{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;background:var(--paper);border:3px solid var(--ink);border-radius:26px;box-shadow:6px 6px 0 var(--ink);padding:16px 20px;overflow:hidden;position:relative}
+.hero .mouse{width:100px;height:100px}
+.hero h1{font-family:var(--f-title);font-weight:400;font-size:clamp(28px,3.6vw,44px);color:var(--royal);letter-spacing:.3px}
+.hero .lr{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:14px;background:var(--gold);border:2px solid var(--ink);border-radius:10px;padding:1px 10px;transform:rotate(-2deg);margin-bottom:4px}
+.hero .sub{color:var(--muted);font-weight:700;margin-top:4px;max-width:64ch}
+.hero .sub b{color:var(--ink)}
+.starbar{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:0}
+.stars{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;max-width:330px}
+.star{width:30px;height:30px}
+.star path{fill:#fff;stroke:var(--ink);stroke-width:2.2}
+.star.on path{fill:var(--gold)}
+.star.pop{animation:pop .6s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.6) rotate(20deg)}100%{transform:scale(1)}}
+.starcount{font-family:var(--f-display);font-weight:800;font-size:15px}
+.rank{font-family:var(--f-hand);font-size:17px;background:var(--royal);color:#fff;border-radius:999px;padding:2px 12px;border:2px solid var(--ink)}
+@media (max-width:640px){.hero{grid-template-columns:auto 1fr}.starbar{grid-column:1/-1;align-items:flex-start}.stars{justify-content:flex-start}.hero .mouse{width:68px;height:68px}}
+
+.lab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;margin-top:22px;align-items:start}
+@media (min-height:760px) and (min-width:1060px){.benchcol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+@media (max-width:1059px){.lab{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--paper);border:3px solid var(--ink);border-radius:var(--r);box-shadow:var(--sh)}
+
+/* ---------- workshop ---------- */
+.bench{padding:12px}
+.btop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 4px 10px}
+.btop h2{font-family:var(--f-title);font-weight:400;font-size:26px;color:var(--royal)}
+.objtabs{display:flex;gap:6px;flex-wrap:wrap}
+.objtabs button{border:2px solid var(--ink);border-radius:999px;background:#fff;font-weight:900;font-size:14px;padding:4px 12px;display:flex;align-items:center;gap:6px}
+.objtabs button i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);display:inline-block}
+.objtabs button[aria-selected="true"]{background:var(--gold);box-shadow:2px 2px 0 var(--ink)}
+.canvasbox{border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--wood)}
+#bench{display:block;width:100%;height:300px;touch-action:none;cursor:grab}
+.bctrl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:12px}
+.big{font-family:var(--f-display);font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:14px;padding:7px 16px;background:var(--pea);box-shadow:3px 3px 0 var(--ink);transition:transform .08s}
+.big:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.big.alt{background:var(--gold)}.big.soft{background:#fff}.big.rose{background:var(--rose)}
+.big:disabled{opacity:.5;cursor:not-allowed}
+.count{font-family:var(--f-display);font-weight:800;font-size:16px;border:2px solid var(--ink);border-radius:12px;padding:5px 12px;background:#fff;font-variant-numeric:tabular-nums}
+.zoom{display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px}
+.zoom input{accent-color:var(--royal);width:140px}
+.bhint{font-size:13px;font-weight:700;color:var(--muted);margin:8px 2px 0}
+.home{display:flex;gap:10px;align-items:flex-start;margin-top:12px;background:var(--night2);border:2px dashed var(--ink);border-radius:14px;padding:10px 12px;font-size:14px;font-weight:700}
+
+/* ---------- chapters ---------- */
+.chapters{display:flex;flex-direction:column;gap:20px;min-width:0}
+.cnav{display:flex;gap:6px;flex-wrap:wrap}
+.cnav a{text-decoration:none;color:var(--ink);font-weight:800;font-size:13px;border:2px solid var(--ink);border-radius:999px;padding:3px 10px;background:#fff}
+.cnav a.done{background:var(--pea);color:#fff}
+.ch{padding:18px 18px 20px;scroll-margin-top:16px;min-width:0}
+.chead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.shield{flex:none;width:50px;height:56px}
+.chead .eyebrow{font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chead h2{font-family:var(--f-title);font-weight:400;font-size:27px;color:var(--ink)}
+.chead .got{margin-left:auto;flex:none}
+.ch p{margin:.4em 0}
+.story{font-size:16.5px;background:linear-gradient(transparent 0,transparent),var(--night2);border-left:5px solid var(--rose);border-radius:4px 12px 12px 4px;padding:10px 14px;margin:6px 0 10px}
+.steps{margin:6px 0 4px;padding-left:22px}.steps li{margin:4px 0}
+.say{display:flex;gap:10px;align-items:flex-start;margin:12px 0}
+.say svg{width:50px;height:50px;flex:none}
+.bubble{font-family:var(--f-hand);font-size:17px;background:#fff;border:2px solid var(--ink);border-radius:16px;border-top-left-radius:4px;padding:8px 12px;line-height:1.35}
+.status{font-weight:800;font-size:14px;border-radius:12px;padding:6px 10px;border:2px dashed var(--ink);background:#fff;display:inline-block}
+.status.ok{border-style:solid;background:#DDF7E8;color:#0D6B47}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.field label{display:block;font-weight:800;font-size:13px;margin-bottom:3px}
+.inp{width:100%;border:2px solid var(--ink);border-radius:10px;padding:7px 10px;background:#fff;font-weight:700}
+.inp:focus{background:#FFF6D8}
+.sheet{margin-top:22px;padding:16px 22px 18px}
+.sheet .who{display:grid;grid-template-columns:minmax(90px,.6fr) minmax(200px,2fr) minmax(130px,.9fr);gap:10px;padding-bottom:14px;border-bottom:2px dashed var(--ink)}
+@media (max-width:640px){.sheet .who{grid-template-columns:1fr 1fr}.sheet .who .nm{grid-column:1/-1;order:-1}}
+.sheet h2{font-family:var(--f-display);font-weight:900;font-size:clamp(20px,2.4vw,26px);text-align:center;letter-spacing:.04em;margin:14px 0 8px}
+.sheet .meta{display:grid;gap:4px;max-width:90ch;margin:0 auto;font-size:16.5px}
+.sheet .meta p{margin:0}
+.scroll{background:#FFF1C9;border:3px solid var(--ink);border-radius:8px 8px 22px 22px;padding:12px 16px;font-size:15px;position:relative}
+.scroll b{font-family:var(--f-title);font-weight:400;font-size:20px;color:var(--royal)}
+
+/* order game */
+.order{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.order button{border:3px solid var(--ink);border-radius:14px;background:#fff;padding:10px 12px;font-weight:800;text-align:left;display:flex;gap:10px;align-items:center;box-shadow:2px 2px 0 var(--ink)}
+.order button .n{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--f-display);background:var(--night2)}
+.order button.ok{background:#DDF7E8}.order button.ok .n{background:var(--ok);color:#fff}
+.order button.no{animation:shake .4s;background:#FFE1E1}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.method{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--night2);border:2px solid var(--ink);border-radius:14px;padding:10px 14px;margin:10px 0}
+.method .eq{font-family:var(--f-display);font-weight:800;font-size:28px;display:flex;align-items:center;gap:8px}
+.fr{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}
+.fr span:first-child{border-bottom:3px solid var(--ink);padding:0 6px}
+.method .legend{font-size:14px;font-weight:700}
+
+/* ruler fragment */
+.rulerfig{display:block;width:100%;max-width:520px;height:auto;margin:8px 0}
+
+/* tables */
+.tablebox{overflow-x:auto;margin:10px 0}
+table.data{border-collapse:separate;border-spacing:0;width:100%;min-width:460px;font-variant-numeric:tabular-nums}
+table.data th{background:var(--royal);color:#fff;font-family:var(--f-display);font-weight:800;font-size:13.5px;padding:8px;border:2px solid var(--ink);border-left-width:0;text-align:center}
+table.data th:first-child{border-left-width:2px;border-top-left-radius:12px}
+table.data th:last-child{border-top-right-radius:12px}
+table.data td{border:2px solid var(--ink);border-top:0;border-left-width:0;padding:5px;background:#fff;text-align:center}
+table.data td:first-child{border-left-width:2px;font-family:var(--f-display);font-weight:800;background:var(--night2);width:52px}
+table.data tr:last-child td:first-child{border-bottom-left-radius:12px}
+table.data tr:last-child td:last-child{border-bottom-right-radius:12px}
+table.data td input{width:100%;min-width:64px;border:2px solid transparent;border-radius:8px;padding:6px;text-align:center;font-weight:800;background:#FFFBEA}
+table.data td input:focus{border-color:var(--royal);outline:none}
+.cellwrap{display:flex;align-items:center;gap:4px}
+.mini{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin:10px 0}
+.mini .field{width:150px}
+.mini .inp{text-align:center;font-weight:900}
+.mark{flex:none;width:22px;height:22px;display:inline-grid;place-items:center;border-radius:50%;font-weight:900;font-size:13px}
+.mark.ok{background:var(--ok);color:#fff}.mark.bad{background:var(--berry);color:#fff}
+.mark.ok::after{content:"✓"}.mark.bad::after{content:"!"}
+.hint{font-size:13px;color:var(--muted);font-weight:700}
+
+/* 3-mode answer */
+.work{border:3px solid var(--ink);border-radius:16px;overflow:hidden;margin-top:10px;background:#fff}
+.worktabs{display:flex;background:var(--night2);border-bottom:3px solid var(--ink);flex-wrap:wrap}
+.worktabs button{flex:1 1 0;min-width:96px;border:0;border-right:2px solid var(--ink);background:transparent;padding:8px 6px;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.worktabs button:last-child{border-right:0}
+.worktabs button svg{width:20px;height:20px}
+.worktabs button[aria-selected="true"]{background:var(--gold)}
+.workbody{padding:12px}
+.workbody textarea{width:100%;min-height:130px;border:2px solid var(--ink);border-radius:12px;padding:10px;resize:vertical;font-weight:600;background:#FFFEF7;line-height:1.55}
+.qlabel{font-weight:900;margin:8px 0 4px;display:block}
+.starters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.starters button{border:2px dashed var(--ink);border-radius:999px;background:#fff;font-size:13px;font-weight:800;padding:3px 10px}
+.fracrows{display:flex;flex-direction:column;gap:12px}
+.fracrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--f-display);font-weight:800;font-size:20px}
+.fracrow .fr input{width:84px;text-align:center;border:2px solid var(--ink);border-radius:8px;padding:3px;font-weight:800;font-size:16px;background:#FFFBEA;margin:3px 0}
+.fracrow .barline{width:100%;height:3px;background:var(--ink);border-radius:2px}
+.fracrow .res{width:90px;text-align:center;border:2px solid var(--ink);border-radius:8px;padding:5px;font-weight:800;font-size:16px;background:#E9FFF3}
+.fracrow .u{font-size:16px}
+.fracrow .nm{font-size:14px;font-family:var(--f-body);font-weight:800;color:var(--muted);min-width:96px}
+.fracrow select{border:2px solid var(--ink);border-radius:8px;padding:4px;font-weight:800;font-size:15px;background:#fff}
+.fracrow .sm{width:62px;text-align:center;border:2px solid var(--ink);border-radius:8px;padding:4px;font-weight:800;font-size:16px;background:#FFFBEA}
+.padtools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.dot{width:28px;height:28px;border-radius:50%;border:3px solid #fff;outline:2px solid var(--ink)}
+.dot[aria-pressed="true"]{outline-width:4px;outline-color:var(--royal)}
+.tbtn{border:2px solid var(--ink);border-radius:10px;background:#fff;padding:3px 10px;font-weight:800;font-size:13px}
+.tbtn[aria-pressed="true"]{background:var(--rose)}
+.pad{display:block;width:100%;aspect-ratio:12/7;border:2px solid var(--ink);border-radius:10px;touch-action:none;cursor:crosshair;background-color:#fff;background-image:linear-gradient(#cfe0f7 1px,transparent 1px),linear-gradient(90deg,#cfe0f7 1px,transparent 1px);background-size:20px 20px}
+.drop{display:block;border:3px dashed var(--ink);border-radius:14px;padding:18px;text-align:center;background:var(--night2);font-weight:800;cursor:pointer}
+.drop.over{background:#FFF1C9}
+.drop input{display:none}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.photo{position:relative;border:2px solid var(--ink);border-radius:10px;overflow:hidden;background:#fff}
+.photo img{display:block;width:100%;height:150px;object-fit:cover}
+.photo button{position:absolute;top:6px;right:6px;border:2px solid var(--ink);border-radius:8px;background:#fff;font-weight:900;font-size:12px;padding:1px 7px}
+
+.q{border-top:2px dashed var(--ink);padding-top:12px;margin-top:14px}
+.q:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.q h3{font-family:var(--f-display);font-weight:800;font-size:17px;margin-bottom:6px}
+.choice{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.choice button{border:2px solid var(--ink);border-radius:12px;background:#fff;font-weight:800;padding:6px 12px}
+.choice button[aria-pressed="true"]{background:var(--gold)}
+#mol{display:block;width:100%;max-width:440px;aspect-ratio:1/1;margin:8px auto;border-radius:16px}
+.ansrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px;font-weight:800}
+.ansrow input{width:190px}
+.ansrow select{border:2px solid var(--ink);border-radius:10px;padding:6px;font-weight:800;background:#fff}
+
+.checklist{list-style:none;padding:0;margin:8px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px}
+.checklist li{display:flex;gap:8px;align-items:center;font-weight:700}
+.checklist li .mark{background:rgba(255,255,255,.5)}
+.final{background:linear-gradient(140deg,var(--royal),var(--rose));color:#fff}
+.final .chead h2,.final .chead .eyebrow{color:#fff}
+.final .bubble{color:var(--ink)}
+.dlbtn{font-size:20px;background:var(--gold);padding:12px 22px}
+.msg{font-weight:800;margin-top:10px;min-height:1.5em}
+.confirmbox{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(160%);background:var(--ink);color:#fff;border-radius:16px;padding:10px 18px;font-family:var(--f-hand);font-size:19px;z-index:50;transition:transform .35s;max-width:calc(100% - 32px);text-align:center;box-shadow:4px 4px 0 var(--gold)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+#report{position:absolute;left:-14000px;top:0;width:760px;background:#fff;color:#1d1733;font-family:var(--f-body)}
+#report .rb{padding:12px 26px}
+#report h1{font-size:24px;text-align:center;margin-bottom:4px;font-family:var(--f-display)}
+#report h2{font-size:18px;margin-bottom:8px;font-family:var(--f-display)}
+#report p{margin:3px 0;font-size:15px}
+#report table{border-collapse:collapse;width:100%;font-size:15px}
+#report td,#report th{border:1.5px solid #1d1733;padding:6px;text-align:center}
+#report th{background:#ECE7FF}
+#report img{max-width:100%;max-height:820px;display:block;margin:6px auto;border:1px solid #bbb}
+#report .ans{white-space:pre-wrap;font-size:15px;border:1px solid #ccc;border-radius:8px;padding:8px;background:#FCFCFF}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mouse" viewBox="0 0 100 100">
+    <circle cx="24" cy="30" r="17" fill="#C9C1DA" stroke="#2B1F4A" stroke-width="4"/><circle cx="24" cy="30" r="9" fill="#FFB3CB"/>
+    <circle cx="76" cy="30" r="17" fill="#C9C1DA" stroke="#2B1F4A" stroke-width="4"/><circle cx="76" cy="30" r="9" fill="#FFB3CB"/>
+    <ellipse cx="50" cy="60" rx="32" ry="30" fill="#C9C1DA" stroke="#2B1F4A" stroke-width="4"/>
+    <circle cx="38" cy="56" r="10" fill="#fff" stroke="#2B1F4A" stroke-width="3.5"/><circle cx="62" cy="56" r="10" fill="#fff" stroke="#2B1F4A" stroke-width="3.5"/>
+    <path d="M48 56h4" stroke="#2B1F4A" stroke-width="3.5"/>
+    <circle cx="40" cy="57" r="4" fill="#2B1F4A"/><circle cx="64" cy="57" r="4" fill="#2B1F4A"/>
+    <ellipse cx="50" cy="72" rx="5" ry="4" fill="#FF7AA8" stroke="#2B1F4A" stroke-width="2.5"/>
+    <path d="M42 80 Q50 86 58 80" fill="none" stroke="#2B1F4A" stroke-width="3" stroke-linecap="round"/>
+    <path d="M30 74h-16M30 78l-14 4M70 74h16M70 78l14 4" stroke="#2B1F4A" stroke-width="2" stroke-linecap="round"/>
+    <path d="M36 32 L40 18 L46 28 L50 14 L54 28 L60 18 L64 32Z" fill="#FFC23D" stroke="#2B1F4A" stroke-width="3" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="shield" viewBox="0 0 50 56"><path d="M4 6 Q25 0 46 6 L46 28 Q46 46 25 54 Q4 46 4 28Z" stroke="#2B1F4A" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="hero">
+    <svg class="mouse" viewBox="0 0 100 100" aria-hidden="true"><use href="#mouse"/></svg>
+    <div>
+      <span class="lr">Лабораторна робота № 3</span>
+      <h1>Королівство Дрібноцарство</h1>
+      <p class="sub"><b>Вимірювання розмірів малих тіл.</b> Злий чаклун зачарував усі лінійки королівства. Допоможи мишеняті Міліметрику врятувати королівське свято за допомогою методу рядів!</p>
+    </div>
+    <div class="starbar">
+      <div class="stars" id="stars" aria-label="Чарівні зірки"></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><span class="starcount" id="starcount">0 / 10</span><span class="rank" id="rank">Учень чарівника</span></div>
+    </div>
+  </header>
+
+  <section class="card sheet" aria-label="Титульна частина лабораторної роботи">
+    <div class="who">
+      <div class="field"><label for="stClass">Клас</label><input class="inp" id="stClass" placeholder="7-Б"></div>
+      <div class="field nm"><label for="stName">Прізвище та ім'я</label><input class="inp" id="stName" placeholder="Шевченко Остап" autocomplete="name"></div>
+      <div class="field"><label for="stDate">Дата (автоматично)</label><input class="inp" id="stDate" readonly tabindex="-1" style="background:var(--night2)"></div>
+    </div>
+    <h2>ЛАБОРАТОРНА РОБОТА № 3</h2>
+    <div class="meta">
+      <p><b>Тема.</b> Вимірювання розмірів малих тіл.</p>
+      <p><b>Мета:</b> визначити методом рядів діаметр горошини, діаметр пшоняного зернятка, товщину нитки.</p>
+      <p><b>Обладнання:</b> лінійка; дрібні тіла (горох, пшоно); олівець; нитка (або «Чарівна майстерня» нижче).</p>
+    </div>
+  </section>
+
+  <main class="lab">
+    <!-- ===== WORKSHOP ===== -->
+    <section class="benchcol">
+      <div class="card bench">
+        <div class="btop">
+          <h2>Чарівна майстерня</h2>
+          <div class="objtabs" role="tablist" aria-label="Що вимірюємо">
+            <button role="tab" data-obj="pea" aria-selected="true"><i style="background:#9BD15A"></i>Горох</button>
+            <button role="tab" data-obj="millet" aria-selected="false"><i style="background:#F4CF55"></i>Пшоно</button>
+            <button role="tab" data-obj="thread" aria-selected="false"><i style="background:#E5484D"></i>Нитка</button>
+          </div>
+        </div>
+        <div class="canvasbox"><canvas id="bench" aria-label="Лінійка з рядом малих тіл"></canvas></div>
+        <div class="bctrl">
+          <button class="big soft" id="bMinus" aria-label="Забрати одне">−1</button>
+          <button class="big" id="bPlus">+1</button>
+          <button class="big" id="bPlus5">+5</button>
+          <button class="big rose" id="bClear">Прибрати все</button>
+          <span class="count" id="bCount">У ряду: 0</span>
+        </div>
+        <div class="bctrl">
+          <label class="zoom" for="zoom">Лупа <input type="range" id="zoom" min="1" max="6" step="0.1" value="1"> <span id="zoomV">×1</span></label>
+          <label class="zoom" for="pan">Зсув <input type="range" id="pan" min="0" max="100" step="1" value="0"></label>
+        </div>
+        <p class="bhint">Збільш лупою кінець ряду й подивись, навпроти якої поділки він закінчується. Ряд можна рухати пальцем або мишкою.</p>
+        <div class="home"><svg viewBox="0 0 100 100" width="34" height="34" aria-hidden="true"><use href="#mouse"/></svg><span>Маєш удома справжній горох, пшоно, нитку й лінійку? Виконай досліди насправді, запиши свої числа в таблицю і додай фото в розділі 6. Так навіть краще!</span></div>
+      </div>
+    </section>
+
+    <!-- ===== CHAPTERS ===== -->
+    <section class="chapters">
+      <nav class="cnav" id="cnav" aria-label="Розділи казки">
+        <a href="#c0" data-c="0">Пролог</a><a href="#c1" data-c="1">Метод</a><a href="#c2" data-c="2">Лінійка</a><a href="#c3" data-c="3">Горошина</a><a href="#c4" data-c="4">Пшонинка</a><a href="#c5" data-c="5">Нитка</a><a href="#c6" data-c="6">Діаметри</a><a href="#c7" data-c="7">Висновок</a><a href="#c8" data-c="8">Запитання</a><a href="#c9" data-c="9">Творче</a><a href="#c10">Здати</a>
+      </nav>
+
+      <article class="card ch" id="c0">
+        <div class="chead"><svg class="shield" style="fill:var(--rose)"><use href="#shield"/></svg><div><div class="eyebrow">Пролог</div><h2>Королівський указ</h2></div><svg class="got star" data-star="0" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">У далекому королівстві Дрібноцарство готувалися до великого свята. Але злий чаклун Окомір позаздрив і зачарував усі лінійки: тепер вони показують лише цілі міліметри, а дрібніших поділок не бачить ніхто. А королеві якраз треба дізнатися розміри найменших речей у королівстві!</div>
+        <div class="scroll">
+          <b>Указ Її Величності</b><br>
+          1. Виміряти <b style="font-family:var(--f-body);font-size:15px;color:var(--ink)">діаметр горошини</b> для випробування принцеси.<br>
+          2. Виміряти <b style="font-family:var(--f-body);font-size:15px;color:var(--ink)">діаметр пшоняного зернятка</b> для чарівної каші.<br>
+          3. Виміряти <b style="font-family:var(--f-body);font-size:15px;color:var(--ink)">товщину нитки</b> для весільної сукні.
+        </div>
+        <div class="say"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#mouse"/></svg><div class="bubble">Я Міліметрик, придворний вимірювач. Впиши нагорі сторінки своє прізвище, ім'я та клас, і я призначу тебе своїм помічником!</div></div>
+      </article>
+
+      <article class="card ch" id="c1">
+        <div class="chead"><svg class="shield" style="fill:var(--gold)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 1</div><h2>Секрет методу рядів</h2></div><svg class="got star" data-star="1" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Міліметрик дістав зі скрині стару книгу мудреців. «Коли одна річ занадто мала для лінійки, — прочитав він, — склади з таких речей <b>ряд</b>!»</div>
+        <p>Метод рядів застосовують тоді, коли <b>ціна поділки</b> шкали приладу не дозволяє провести вимірювання з достатньою точністю. Щоб визначити розмір <i>d</i> малого тіла, потрібно:</p>
+        <div class="method">
+          <div class="eq">d = <span class="fr"><span>l</span><span>n</span></span></div>
+          <div class="legend">l — довжина ряду, мм<br>n — кількість тіл (витків) у ряді<br>d — діаметр (товщина) одного тіла, мм</div>
+        </div>
+        <p><b>Чарівне випробування:</b> натискай на кроки методу в правильному порядку.</p>
+        <div class="order" id="order"></div>
+        <p class="status" id="st1" style="margin-top:10px">Розстав кроки по порядку</p>
+      </article>
+
+      <article class="card ch" id="c2">
+        <div class="chead"><svg class="shield" style="fill:var(--sky)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 2 · Підготовка</div><h2>Розчаклуй лінійку</h2></div><svg class="got star" data-star="2" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Щоб зняти чари з лінійки, треба назвати її таємне число — <b>ціну поділки</b>.</div>
+        <p>Візьми два найближчі підписані штрихи, знайди різницю їхніх значень і поділи на кількість поділок між ними:</p>
+        <svg class="rulerfig" viewBox="0 0 520 110" role="img" aria-label="Фрагмент лінійки між 1 і 2 сантиметрами">
+          <rect x="10" y="10" width="500" height="80" rx="8" fill="#FFF1C9" stroke="#2B1F4A" stroke-width="3"/>
+          <g id="rticks"></g>
+          <text x="60" y="80" font-family="Rubik,sans-serif" font-weight="800" font-size="22" fill="#2B1F4A" text-anchor="middle">1</text>
+          <text x="460" y="80" font-family="Rubik,sans-serif" font-weight="800" font-size="22" fill="#2B1F4A" text-anchor="middle">2</text>
+          <text x="490" y="80" font-family="Rubik,sans-serif" font-weight="700" font-size="14" fill="#2B1F4A">см</text>
+          <path d="M60 98 H460" stroke="#6C4BD8" stroke-width="3" marker-end="url(#ar)" marker-start="url(#ar2)"/>
+          <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#6C4BD8"/></marker><marker id="ar2" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto"><path d="M8 0L0 4L8 8Z" fill="#6C4BD8"/></marker></defs>
+        </svg>
+        <p>Обчисли ціну поділки <b>C<sub>лін</sub></b>. Обери, як зручніше: надрукувати, написати олівцем або сфотографувати розв'язок із зошита.</p>
+        <div class="work" data-work="price"></div>
+        <div class="ansrow"><label for="priceAns">Відповідь: C<sub>лін</sub> =</label><input class="inp" id="priceAns" inputmode="decimal" style="width:110px;text-align:center"><select id="priceUnit" aria-label="Одиниця"><option>мм</option><option>см</option></select><span class="mark" id="mPrice"></span></div>
+      </article>
+
+      <article class="card ch" id="c3">
+        <div class="chead"><svg class="shield" style="fill:var(--pea)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 3 · Експеримент</div><h2>Горошина для принцеси</h2></div><svg class="got star" data-star="3" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Королева хоче покласти під двадцять перин горошину, щоб перевірити, чи справжня принцеса прийшла до палацу. Але горошина має бути певного розміру! Одна горошина для зачарованої лінійки замала, тож викладемо цілий ряд.</div>
+        <ol class="steps">
+          <li>У майстерні обери <b>«Горох»</b> і виклади ряд горошин упритул (наприклад, 15–20 штук).</li>
+          <li>Збільш лупою кінець ряду й виміряй довжину ряду <b>l</b> у міліметрах.</li>
+          <li>Порахуй кількість горошин <b>n</b>. Запиши обидва числа.</li>
+        </ol>
+        <div class="mini" data-row="0"></div>
+        <p class="status" id="st3">Чекаю на твої виміри</p>
+      </article>
+
+      <article class="card ch" id="c4">
+        <div class="chead"><svg class="shield" style="fill:#F4CF55"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 4 · Експеримент</div><h2>Пшонинка для чарівної каші</h2></div><svg class="got star" data-star="4" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Королівський кухар варить чарівну кашу, від якої всі гості стають веселими. Але чари спрацюють, тільки якщо він знатиме точний розмір пшоняного зернятка.</div>
+        <ol class="steps">
+          <li>Обери <b>«Пшоно»</b> і виклади довгий ряд зерняток (чим більше — тим точніше, хоч 40–50).</li>
+          <li>Виміряй довжину ряду <b>l</b> і порахуй кількість зерняток <b>n</b>.</li>
+        </ol>
+        <div class="mini" data-row="1"></div>
+        <p class="status" id="st4">Чекаю на твої виміри</p>
+      </article>
+
+      <article class="card ch" id="c5">
+        <div class="chead"><svg class="shield" style="fill:var(--berry)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 5 · Експеримент</div><h2>Нитка для весільної сукні</h2></div><svg class="got star" data-star="5" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Кравчиня-павучиха шиє сукню для принцеси. Щоб розрахувати, скільки нитки знадобиться, їй треба знати її товщину. Намотаємо нитку на олівець!</div>
+        <ol class="steps">
+          <li>Обери <b>«Нитка»</b> і намотай на олівець багато витків упритул один до одного.</li>
+          <li>Виміряй довжину намотки <b>l</b> і порахуй кількість витків <b>n</b>.</li>
+        </ol>
+        <div class="mini" data-row="2"></div>
+        <p class="status" id="st5">Чекаю на твої виміри</p>
+      </article>
+
+      <article class="card ch" id="c6">
+        <div class="chead"><svg class="shield" style="fill:var(--royal)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 6 · Обчислення</div><h2>Королівська книга вимірів</h2></div><svg class="got star" data-star="6" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <p class="hint">Результати всіх вимірювань відразу заносьте до таблиці. Діаметри й товщину округліть до десятих.</p>
+        <div class="tablebox">
+          <table class="data" id="tbl">
+            <thead><tr><th>№ досліду</th><th>Назва тіла</th><th>Довжина ряду l, мм</th><th>Кількість тіл (витків) n</th><th>Діаметр (товщина) d = l/n, мм</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p>Обчисли діаметр (товщину) для кожного досліду. Можна надрукувати дріб, написати олівцем або вставити фото розв'язку з зошита.</p>
+        <div class="work" data-work="calc"></div>
+        <p class="status" id="st6" style="margin-top:12px">Відповіді з'являться в таблиці автоматично</p>
+      </article>
+
+      <article class="card ch" id="c7">
+        <div class="chead"><svg class="shield" style="fill:var(--rose)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 7 · Аналіз</div><h2>Лист до королеви</h2></div><svg class="got star" data-star="7" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Королева чекає на звіт! Напиши висновок, у якому зазнач:</div>
+        <ol class="steps">
+          <li>чого ти навчився (навчилася) під час роботи;</li>
+          <li>які результати отримав (отримала);</li>
+          <li>як можна підвищити точність експерименту;</li>
+          <li>для чого можуть знадобитися вміння, набуті під час роботи.</li>
+        </ol>
+        <div class="work" data-work="concl"></div>
+      </article>
+
+      <article class="card ch" id="c8">
+        <div class="chead"><svg class="shield" style="fill:var(--sky)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 8</div><h2>Загадки мудрої Сови</h2></div><svg class="got star" data-star="8" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Біля брами палацу сидить мудра Сова. Вона пропустить на свято лише того, хто розгадає три загадки (контрольні запитання).</div>
+        <div class="q">
+          <h3>1. При вимірюванні розмірів малих тіл один учень вклав у ряд 5 пшонин, а другий — 25. Який учень точніше визначив середній розмір пшонини?</h3>
+          <div class="choice" id="q1choice"><button type="button" data-v="5" aria-pressed="false">Перший (5 пшонин)</button><button type="button" data-v="25" aria-pressed="false">Другий (25 пшонин)</button></div>
+          <label class="qlabel" for="q1why">Поясни чому:</label>
+          <textarea class="inp" id="q1why" rows="2" style="min-height:64px"></textarea>
+        </div>
+        <div class="q">
+          <h3>2. Чому розміри тіл, виміряні способом рядів, є середніми?</h3>
+          <textarea class="inp" id="q2" rows="3" style="min-height:80px"></textarea>
+        </div>
+        <div class="q">
+          <h3>3. Визнач діаметр молекули за фотографією, використовуючи метод рядів, якщо фотографію збільшено в 50 000 разів.</h3>
+          <canvas id="mol" aria-label="Збільшене фото молекул з лінійкою"></canvas>
+          <p class="hint">Порахуй, скільки молекул вміщається вздовж лінійки на довжині 10 см, і знайди діаметр на фото. Потім поділи на збільшення.</p>
+          <div class="work" data-work="q3"></div>
+          <div class="ansrow"><label for="q3ans">Відповідь: d =</label><input class="inp" id="q3ans" placeholder="напр. 2·10^-5"><select id="q3unit" aria-label="Одиниця"><option>мм</option><option>м</option><option>нм</option></select><span class="mark" id="mQ3"></span></div>
+          <p class="hint">Степінь можна писати так: 3·10^-5 або 3*10^-5.</p>
+        </div>
+      </article>
+
+      <article class="card ch" id="c9">
+        <div class="chead"><svg class="shield" style="fill:var(--pea)"><use href="#shield"/></svg><div><div class="eyebrow">Розділ 9 · Бонус</div><h2>Творче завдання</h2></div><svg class="got star" data-star="9" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z"/></svg></div>
+        <div class="story">Після свята королівський бібліотекар і годинникар теж попросили про допомогу. Придумай, як їм виміряти те, що здається неможливим!</div>
+        <div class="work" data-work="creative"></div>
+      </article>
+
+      <article class="card ch final" id="c10">
+        <div class="chead"><svg class="shield" style="fill:var(--gold)"><use href="#shield"/></svg><div><div class="eyebrow">Кінець казки</div><h2>Здай роботу в Classroom</h2></div></div>
+        <ul class="checklist" id="checklist"></ul>
+        <div class="say"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#mouse"/></svg><div class="bubble" id="finalBubble">Натисни кнопку, і я перепишу всю твою роботу в чарівний PDF-сувій. Потім прикріпи його до завдання в Google Classroom.</div></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="big dlbtn" id="btnPdf">Завантажити PDF</button>
+          <button class="big soft" id="btnWipe" style="font-size:15px">Почати заново</button>
+          <span class="confirmbox" id="wipeConfirm" hidden><b>Стерти всі відповіді?</b><button class="big soft" id="wipeYes" style="font-size:14px;background:var(--berry);color:#fff">Так, стерти</button><button class="big soft" id="wipeNo" style="font-size:14px">Ні</button></span>
+        </div>
+        <p class="msg" id="pdfMsg"></p>
+      </article>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="report" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+const num=v=>{if(v==null)return NaN;const s=String(v).replace(/\s/g,'').replace(',','.');return s===''?NaN:Number(s)};
+const fmt=(x,d=1)=>isFinite(x)?x.toFixed(d).replace('.',','):'—';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let toastT;function toast(m,ms=2600){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),ms)}
+function sci(v){ // parse "2·10^-5", "2*10^-5", "2e-5", "0,00002"
+  if(v==null)return NaN;let s=String(v).replace(/\s/g,'').replace(/,/g,'.').replace(/[−–]/g,'-');
+  s=s.replace(/[·×x*]10\^?\(?(-?\d+)\)?/i,'e$1');if(/^10\^?\(?(-?\d+)\)?$/.test(s))s=s.replace(/^10\^?\(?(-?\d+)\)?$/,'1e$1');
+  return s===''?NaN:Number(s)}
+
+/* ---------------- state ---------------- */
+const KEY='drib-lab-3-v1';
+const NAMES=['Горошина','Пшоняне зернятко','Нитка'];
+function blankWork(){return{mode:'text',text:'',drawing:'',photos:[]}}
+function fresh(){return{
+  student:{name:'',cls:'',date:new Date().toISOString().slice(0,10)},
+  orderDone:false,
+  price:Object.assign(blankWork(),{a:'',b:'',N:'',res:'',ans:'',unit:'мм'}),
+  bench:{seed:Math.floor(Math.random()*1e9),counts:{pea:0,millet:0,thread:0}},
+  rows:NAMES.map(n=>({name:n,l:'',n:'',d:'',fl:'',fn:''})),
+  calc:blankWork(),concl:blankWork(),
+  q:{q1:'',q1why:'',q2:'',ans:'',unit:'мм'},q3:blankWork(),
+  creative:Object.assign(blankWork(),{t1:'',t2:'',t3:''}),
+  stars:Array(10).fill(false)
+}}
+let S=fresh();
+try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);const f=fresh();S=Object.assign(f,o);S.bench=Object.assign(f.bench,o.bench||{});S.q=Object.assign(f.q,o.q||{})}}catch(e){}
+let saveT,warned=false;
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){if(!warned){warned=true;toast('Чернетку не вдалося зберегти в браузері. Не закривай сторінку, поки не завантажиш PDF.',4500)}}},400)}
+
+/* ---------------- stars ---------------- */
+const STAR_PATH='M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.1l1.5-7L2 9.3l7-.8z';
+const STAR_NAMES=['Помічник вимірювача','Знавець методу рядів','Розчаклувальник лінійки','Рятівник принцеси','Королівський кухар','Майстер ниток','Королівський математик','Літописець','Друг мудрої Сови','Винахідник'];
+S.stars.forEach((_,i)=>$('#stars').insertAdjacentHTML('beforeend',`<svg class="star" data-top="${i}" viewBox="0 0 24 24"><title>${STAR_NAMES[i]}</title><path d="${STAR_PATH}"/></svg>`));
+function renderStars(){const n=S.stars.filter(Boolean).length;
+  $$('[data-top]').forEach(e=>e.classList.toggle('on',S.stars[+e.dataset.top]));
+  $$('[data-star]').forEach(e=>e.classList.toggle('on',S.stars[+e.dataset.star]));
+  $$('#cnav a[data-c]').forEach(a=>a.classList.toggle('done',S.stars[+a.dataset.c]));
+  $('#starcount').textContent=n+' / 10';
+  $('#rank').textContent=n>=10?'Великий чарівник мір':n>=7?'Королівський вимірювач':n>=4?'Підмайстер':n>=1?'Помічник':'Учень чарівника';
+  renderChecklist()}
+function award(i,on=true){if(!!S.stars[i]===on)return;S.stars[i]=on;save();renderStars();
+  if(on){const el=$(`[data-top="${i}"]`);el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');toast('Чарівна зірка: «'+STAR_NAMES[i]+'»')}}
+
+/* ---------------- workshop ---------------- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const OBJ={
+  pea:{max:20,label:'горошин',base:[5.6,1.4],spread:0.07},
+  millet:{max:60,label:'зерняток',base:[1.8,0.4],spread:0.08},
+  thread:{max:90,label:'витків',base:[0.45,0.3],spread:0.05}
+};
+const sizes={};
+(function(){const r=rng(S.bench.seed);for(const k of Object.keys(OBJ)){const o=OBJ[k];const mean=o.base[0]+r()*o.base[1];sizes[k]=[];for(let i=0;i<o.max;i++)sizes[k].push(mean*(1+o.spread*(r()*2-1)))}})();
+const trueL=k=>sizes[k].slice(0,S.bench.counts[k]).reduce((a,b)=>a+b,0);
+let cur='pea',zoom=1,x0=-6;
+const bc=$('#bench'),bx=bc.getContext('2d');let BW=0,BH=0,dpr=1;
+function bresize(){const r=bc.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);BW=r.width;BH=r.height;bc.width=Math.round(BW*dpr);bc.height=Math.round(BH*dpr);clampPan();drawBench()}
+const SPAN=166;
+function pxmm(){return BW/(SPAN/zoom)}
+function maxZoom(){return Math.max(2,Math.min(6,22*SPAN/Math.max(BW,1)))}
+function clampPan(){const span=SPAN/zoom;x0=Math.max(-6,Math.min(160-span,x0));const pr=(x0+6)/Math.max(0.0001,(160-span+6));$('#pan').value=Math.round(Math.max(0,Math.min(1,pr))*100)}
+function drawBench(){
+  const c=bx;c.setTransform(dpr,0,0,dpr,0,0);const k=pxmm();const X=mm=>(mm-x0)*k;
+  // table
+  c.fillStyle='#E9B97A';c.fillRect(0,0,BW,BH);
+  c.strokeStyle='rgba(150,95,40,.28)';c.lineWidth=2;for(let y=14;y<BH;y+=26){c.beginPath();c.moveTo(0,y);c.bezierCurveTo(BW*0.3,y+6,BW*0.6,y-6,BW,y+3);c.stroke()}
+  const RT=BH-92; // ruler top
+  const n=S.bench.counts[cur];
+  // items
+  if(cur==='thread'){
+    const ph=Math.min(7*k,64);const top=RT-ph-2;
+    // pencil
+    c.fillStyle='#FFC23D';c.strokeStyle='#2B1F4A';c.lineWidth=2.5;
+    c.beginPath();c.rect(X(-40),top,X(150)-X(-40),ph);c.fill();c.stroke();
+    c.fillStyle='#F5A623';c.fillRect(X(-40),top+ph*0.62,X(150)-X(-40),ph*0.18);
+    c.beginPath();c.moveTo(X(150),top);c.lineTo(X(150)+ph*1.4,top+ph/2);c.lineTo(X(150),top+ph);c.closePath();c.fillStyle='#F6D6A8';c.fill();c.stroke();
+    c.beginPath();c.moveTo(X(150)+ph*1.0,top+ph*0.36);c.lineTo(X(150)+ph*1.4,top+ph/2);c.lineTo(X(150)+ph*1.0,top+ph*0.64);c.closePath();c.fillStyle='#2B1F4A';c.fill();
+    let x=0;for(let i=0;i<n;i++){const d=sizes.thread[i];const sl=Math.min(d*k*0.6,6);
+      c.beginPath();c.moveTo(X(x)+sl,top-1.5);c.lineTo(X(x+d)+sl,top-1.5);c.lineTo(X(x+d),top+ph+1.5);c.lineTo(X(x),top+ph+1.5);c.closePath();
+      c.fillStyle=i%2?'#E5484D':'#F0626A';c.fill();if(d*k>3){c.strokeStyle='rgba(43,31,74,.55)';c.lineWidth=1;c.stroke()}x+=d}
+    // tail of thread
+    if(n){c.strokeStyle='#E5484D';c.lineWidth=Math.max(1.5,sizes.thread[0]*k*0.8);c.beginPath();c.moveTo(X(x)+3,top+ph);c.bezierCurveTo(X(x)+30,top+ph+20,X(x)+60,top-10,X(x)+90,top+ph*0.4);c.stroke()}
+  }else{
+    let x=0;const col=cur==='pea'?['#9BD15A','#6FA834']:['#F4CF55','#D9A92B'];
+    for(let i=0;i<n;i++){const d=sizes[cur][i];const r=d/2*k;const cx=X(x+d/2),cy=RT-r-1;
+      if(cx+r>-5&&cx-r<BW+5){const g=c.createRadialGradient(cx-r*0.35,cy-r*0.35,r*0.1,cx,cy,r);g.addColorStop(0,'#FFFDE8');g.addColorStop(0.35,col[0]);g.addColorStop(1,col[1]);
+        c.beginPath();c.ellipse(cx,cy,r,cur==='millet'?r*0.92:r,0,0,7);c.fillStyle=g;c.fill();if(r>3){c.strokeStyle='rgba(43,31,74,.6)';c.lineWidth=1.2;c.stroke()}}
+      x+=d}
+  }
+  // ruler
+  c.fillStyle='#FFF6DC';c.strokeStyle='#2B1F4A';c.lineWidth=3;c.beginPath();c.rect(X(-6),RT,X(160)-X(-6),74);c.fill();c.stroke();
+  c.strokeStyle='#2B1F4A';c.fillStyle='#2B1F4A';c.textAlign='center';
+  const fs=Math.max(13,Math.min(22,10+k*0.6));c.font=`800 ${fs}px Rubik, sans-serif`;
+  for(let mm=0;mm<=150;mm++){const xx=X(mm);if(xx<-2||xx>BW+2)continue;const L=mm%10===0?26:mm%5===0?17:10;c.lineWidth=mm%10===0?2:1.2;c.beginPath();c.moveTo(xx,RT);c.lineTo(xx,RT+L);c.stroke();
+    if(mm%10===0)c.fillText(String(mm/10),xx,RT+L+fs+2)}
+  c.font=`700 13px Nunito, sans-serif`;c.textAlign='left';if(X(0)>-30)c.fillText('см',X(0)+4,RT+66);
+  // zoom badge
+  c.font='800 13px Rubik, sans-serif';c.fillStyle='rgba(255,255,255,.85)';c.fillRect(8,8,94,24);c.strokeStyle='#2B1F4A';c.lineWidth=2;c.strokeRect(8,8,94,24);c.fillStyle='#2B1F4A';c.textAlign='center';c.fillText('Лупа ×'+fmt(zoom,1),55,25);
+}
+function followEnd(){if(zoom>1.05){const e=trueL(cur);x0=Math.max(-6,e-(SPAN/zoom)*0.6);clampPan()}}
+function updCount(){const o=OBJ[cur];$('#bCount').textContent=`У ряду: ${S.bench.counts[cur]} ${o.label}`;drawBench()}
+function setObj(k){cur=k;followEnd();$$('.objtabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.obj===k)));updCount()}
+$$('.objtabs button').forEach(b=>b.onclick=()=>setObj(b.dataset.obj));
+const addN=d=>{const o=OBJ[cur];const c=S.bench.counts;const nv=Math.max(0,Math.min(o.max,c[cur]+d));if(nv===c[cur]&&d>0)toast('Ряд уже повний: максимум '+o.max);c[cur]=nv;save();followEnd();updCount();checkAll()};
+$('#bMinus').onclick=()=>addN(-1);$('#bPlus').onclick=()=>addN(1);$('#bPlus5').onclick=()=>addN(5);$('#bClear').onclick=()=>addN(-999);
+$('#zoom').oninput=e=>{const mz=maxZoom();const old=zoom;zoom=Math.min(mz,+e.target.value);if(+e.target.value>mz)e.target.value=mz;
+  // keep end of row in view when zooming
+  const endmm=trueL(cur);const span=SPAN/zoom;if(zoom>old&&endmm>0){x0=endmm-span*0.6}
+  $('#zoomV').textContent='×'+fmt(zoom,1);clampPan();drawBench()};
+$('#pan').oninput=e=>{const span=SPAN/zoom;x0=-6+(+e.target.value/100)*(160-span+6);clampPan();drawBench()};
+let dragX=null;
+bc.addEventListener('pointerdown',e=>{dragX=e.clientX;bc.setPointerCapture(e.pointerId);bc.style.cursor='grabbing'});
+bc.addEventListener('pointermove',e=>{if(dragX==null)return;x0-=(e.clientX-dragX)/pxmm();dragX=e.clientX;clampPan();drawBench()});
+const endD=()=>{dragX=null;bc.style.cursor='grab'};bc.addEventListener('pointerup',endD);bc.addEventListener('pointercancel',endD);
+
+/* ---------------- chapter 1: order game ---------------- */
+const STEPS=['Утворити ряд: викласти тіла впритул одне до одного','Виміряти довжину ряду l','Визначити кількість тіл n у ряді','Обчислити d = l : n'];
+let nextStep=S.orderDone?4:0;
+(function(){const box=$('#order');const idx=[2,0,3,1];
+  idx.forEach(i=>{const b=document.createElement('button');b.type='button';b.dataset.i=i;b.innerHTML=`<span class="n">?</span><span>${STEPS[i]}</span>`;
+    if(S.orderDone){b.classList.add('ok');b.querySelector('.n').textContent=i+1}
+    b.onclick=()=>{if(b.classList.contains('ok'))return;if(i===nextStep){b.classList.add('ok');b.querySelector('.n').textContent=i+1;nextStep++;if(nextStep===4){S.orderDone=true;save();checkAll()}}else{b.classList.remove('no');void b.offsetWidth;b.classList.add('no');toast('Ой, не той крок! Подумай, що треба зробити спершу')}};
+    box.appendChild(b)})})();
+
+/* ruler fragment ticks */
+(function(){let g='';for(let i=0;i<=10;i++){const x=60+i*40;const L=i===0||i===10?36:i===5?26:18;g+=`<line x1="${x}" y1="10" x2="${x}" y2="${10+L}" stroke="#2B1F4A" stroke-width="${i%5===0?3:2}"/>`}$('#rticks').innerHTML=g})();
+
+/* ---------------- tables ---------------- */
+$$('.mini').forEach(box=>{const i=+box.dataset.row;
+  box.innerHTML=`<div class="field"><label for="ml${i}">Довжина ряду l, мм</label><div class="cellwrap"><input class="inp" id="ml${i}" data-i="${i}" data-f="l" inputmode="decimal"><span class="mark" id="mkl${i}"></span></div></div>
+  <div class="field"><label for="mn${i}">Кількість n</label><div class="cellwrap"><input class="inp" id="mn${i}" data-i="${i}" data-f="n" inputmode="numeric"><span class="mark" id="mkn${i}"></span></div></div>`});
+const tb=$('#tbl tbody');
+S.rows.forEach((r,i)=>tb.insertAdjacentHTML('beforeend',`<tr><td>${i+1}</td>
+ <td><input id="tname${i}" data-i="${i}" data-f="name" aria-label="Назва тіла ${i+1}" style="min-width:130px"></td>
+ <td><input id="tl${i}" data-i="${i}" data-f="l" inputmode="decimal" aria-label="Довжина ряду ${i+1}"></td>
+ <td><input id="tn${i}" data-i="${i}" data-f="n" inputmode="numeric" aria-label="Кількість ${i+1}"></td>
+ <td><div class="cellwrap"><input id="td${i}" data-i="${i}" data-f="d" inputmode="decimal" aria-label="Діаметр ${i+1}"><span class="mark" id="mkd${i}"></span></div></td></tr>`));
+function syncRowInputs(i,except){['l','n','d','name'].forEach(f=>{$$(`input[data-i="${i}"][data-f="${f}"]`).forEach(inp=>{if(inp!==except)inp.value=S.rows[i][f]||''})});const r=$('#res'+i);if(r&&r!==except)r.value=S.rows[i].d||''}
+$$('.mini input, #tbl input').forEach(inp=>{inp.value=S.rows[+inp.dataset.i][inp.dataset.f]||'';inp.addEventListener('input',()=>{const i=+inp.dataset.i;S.rows[i][inp.dataset.f]=inp.value;syncRowInputs(i,inp);save();checkAll()})});
+
+/* ---------------- student ---------------- */
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function todayStr(){return todayISO().split('-').reverse().join('.')}
+S.student.date=todayISO();$('#stDate').value=todayStr();
+[['stName','name'],['stClass','cls']].forEach(([id,f])=>{const el=$('#'+id);el.value=S.student[f]||'';el.addEventListener('input',()=>{S.student[f]=el.value;save();checkAll()})});
+
+/* ---------------- control questions ---------------- */
+$$('#q1choice button').forEach(b=>{b.setAttribute('aria-pressed',String(S.q.q1===b.dataset.v));b.onclick=()=>{S.q.q1=b.dataset.v;$$('#q1choice button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));save();checkAll();if(b.dataset.v==='25')toast('Так! Чим довший ряд, тим менша похибка на одне зернятко');else toast('Мудра Сова хитає головою. Подумай ще!')}});
+[['q1why','q1why'],['q2','q2']].forEach(([id,f])=>{const el=$('#'+id);el.value=S.q[f]||'';el.addEventListener('input',()=>{S.q[f]=el.value;save();checkAll()})});
+$('#q3ans').value=S.q.ans||'';$('#q3unit').value=S.q.unit||'мм';
+$('#q3ans').addEventListener('input',e=>{S.q.ans=e.target.value;save();checkAll()});$('#q3unit').addEventListener('change',e=>{S.q.unit=e.target.value;save();checkAll()});
+$('#priceAns').value=S.price.ans||'';$('#priceUnit').value=S.price.unit||'мм';
+$('#priceAns').addEventListener('input',e=>{S.price.ans=e.target.value;save();checkAll()});$('#priceUnit').addEventListener('change',e=>{S.price.unit=e.target.value;save();checkAll()});
+
+/* molecule picture: 25 molecules span 10 cm on the ruler */
+const MOL_N=25;
+function drawMol(){const cv=$('#mol');const r=cv.getBoundingClientRect();const d=Math.min(2,window.devicePixelRatio||1);cv.width=r.width*d;cv.height=r.width*d;const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);const W=r.width;
+  c.fillStyle='#F4F0FF';c.fillRect(0,0,W,W);
+  const R=W*0.43,cx=W/2,cy=W*0.53;c.save();c.beginPath();c.arc(cx,cy,R,0,7);c.fillStyle='#fff';c.fill();c.clip();
+  const rulerW=W*0.8,x0=(W-rulerW)/2;const dm=rulerW/MOL_N;const rr=dm/2;const rowY=cy-rr-2;const dy=dm*Math.sqrt(3)/2;
+  for(let j=-14;j<=14;j++){const y=rowY+j*dy;const off=(Math.abs(j)%2)*rr;for(let i=-3;i<MOL_N+3;i++){const x=x0+rr+i*dm+off;
+    const g=c.createRadialGradient(x-rr*0.35,y-rr*0.35,rr*0.1,x,y,rr);g.addColorStop(0,'#FFE3E3');g.addColorStop(0.5,'#FF8A8A');g.addColorStop(1,'#D94848');
+    c.beginPath();c.arc(x,y,rr*0.96,0,7);c.fillStyle=g;c.fill()}}
+  c.restore();c.beginPath();c.arc(cx,cy,R,0,7);c.lineWidth=4;c.strokeStyle='#2B1F4A';c.stroke();
+  // ruler
+  const top=rowY+rr+1,h=W*0.12;c.fillStyle='rgba(255,255,255,.93)';c.strokeStyle='#2B1F4A';c.lineWidth=2.5;c.beginPath();c.rect(x0-W*0.04,top,rulerW+W*0.08,h);c.fill();c.stroke();
+  c.fillStyle='#2B1F4A';c.textAlign='center';c.font=`800 ${Math.max(10,W*0.035)}px Rubik, sans-serif`;
+  for(let mm=0;mm<=100;mm++){const x=x0+mm*rulerW/100;const L=mm%10===0?h*0.45:mm%5===0?h*0.32:h*0.2;c.lineWidth=mm%10===0?1.6:0.8;c.beginPath();c.moveTo(x,top);c.lineTo(x,top+L);c.stroke();if(mm%10===0)c.fillText(String(mm/10),x,top+h*0.88)}
+  c.font=`700 ${Math.max(9,W*0.025)}px Nunito, sans-serif`;c.textAlign='left';c.fillText('см',x0-W*0.035,top+h*0.88);
+  c.font=`800 ${Math.max(11,W*0.032)}px Rubik, sans-serif`;c.textAlign='center';c.fillText('Збільшення ×50 000',cx,W*0.065);
+}
+
+/* ---------------- 3-mode work areas ---------------- */
+const ICONS={text:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10h1M10 10h1M14 10h1M7 14h10"/></svg>',
+ draw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/></svg>',
+ photo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/></svg>'};
+const TAB={text:'Друкую',draw:'Пишу олівцем',photo:'Фото з зошита'};
+const STARTERS=['Я навчився (навчилася) вимірювати розміри малих тіл методом рядів.','Я отримав (отримала) такі результати: діаметр горошини ... мм, діаметр пшоняного зернятка ... мм, товщина нитки ... мм.','Щоб підвищити точність, треба ','Ці вміння знадобляться, щоб '];
+const CRE_Q=['1. Запропонуй спосіб вимірювання звичайною лінійкою товщини аркуша підручника.','2. Запропонуй спосіб підрахунку кількості літер (наближено) у своєму підручнику.','3. Як визначити якомога точніше тривалість одного коливання маятника настінного годинника, точність ходу якого перевірено, користуючись тільки цим годинником?'];
+
+const TEXT_PANES={
+  price(tp,W){tp.innerHTML=`<div class="fracrow"><span>C<sub>лін</sub> =</span><span class="fr"><span style="border:0;padding:0;display:flex;gap:4px;align-items:center"><input class="sm" id="pb" placeholder="b" inputmode="decimal" aria-label="Більше значення"> − <input class="sm" id="pa" placeholder="a" inputmode="decimal" aria-label="Менше значення"></span><span class="barline"></span><input id="pN" placeholder="N" inputmode="numeric" aria-label="Кількість поділок"></span><span>=</span><input class="res" id="pres" placeholder="?" inputmode="decimal" aria-label="Результат"><span class="u">см =</span><span class="u" id="pmm">… мм</span></div>
+    <p class="hint" style="margin:10px 0 0">b і a — значення двох сусідніх підписаних штрихів, N — кількість поділок між ними.</p>`;
+    [['pb','b'],['pa','a'],['pN','N'],['pres','res']].forEach(([id,f])=>{const el=tp.querySelector('#'+id);el.value=W[f]||'';el.addEventListener('input',()=>{W[f]=el.value;save();updPmm()})});
+    function updPmm(){const v=num(W.res);tp.querySelector('#pmm').textContent=isFinite(v)?fmt(v*10,1)+' мм':'… мм'}updPmm()},
+  calc(tp){tp.innerHTML='<div class="fracrows">'+S.rows.map((r,i)=>`<div class="fracrow"><span class="nm" id="fnm${i}">${esc(r.name)}</span><span>d<sub>${i+1}</sub> =</span><span class="fr"><input data-i="${i}" data-f="fl" placeholder="l" inputmode="decimal" aria-label="Чисельник ${i+1}"><span class="barline"></span><input data-i="${i}" data-f="fn" placeholder="n" inputmode="numeric" aria-label="Знаменник ${i+1}"></span><span>≈</span><input class="res" id="res${i}" data-i="${i}" placeholder="?" inputmode="decimal" aria-label="Діаметр ${i+1}"><span class="u">мм</span><span class="mark" id="mr${i}"></span></div>`).join('')+'</div><p class="hint" style="margin:10px 0 0">У чисельник пиши довжину ряду, у знаменник — кількість. Відповідь округли до десятих.</p>';
+    tp.querySelectorAll('input[data-f]').forEach(inp=>{inp.value=S.rows[+inp.dataset.i][inp.dataset.f]||'';inp.addEventListener('input',()=>{S.rows[+inp.dataset.i][inp.dataset.f]=inp.value;save()})});
+    tp.querySelectorAll('.res').forEach(inp=>{const i=+inp.dataset.i;inp.value=S.rows[i].d||'';inp.addEventListener('input',()=>{S.rows[i].d=inp.value;syncRowInputs(i,inp);save();checkAll()})})},
+  concl(tp,W){tp.innerHTML='<div class="starters">'+STARTERS.map(s=>`<button type="button">${esc(s.length>36?s.slice(0,34)+'…':s)}</button>`).join('')+'</div><textarea id="ta-concl" placeholder="Шановна Королево! Повідомляю, що…"></textarea>';
+    const ta=tp.querySelector('textarea');ta.value=W.text||'';ta.addEventListener('input',()=>{W.text=ta.value;save();checkAll()});
+    tp.querySelectorAll('.starters button').forEach((b,i)=>b.onclick=()=>{ta.value=(ta.value&&!/\s$/.test(ta.value)?ta.value+' ':ta.value)+STARTERS[i];W.text=ta.value;save();checkAll();ta.focus()})},
+  q3(tp,W){tp.innerHTML='<textarea id="ta-q3" placeholder="Розв\'язання: на 10 см = 100 мм уміщається n = … молекул. d на фото = … мм. d = … : 50 000 = … мм"></textarea>';const ta=tp.querySelector('textarea');ta.value=W.text||'';ta.addEventListener('input',()=>{W.text=ta.value;save();checkAll()})},
+  creative(tp,W){tp.innerHTML=CRE_Q.map((q,i)=>`<label class="qlabel" for="cre${i+1}">${esc(q)}</label><textarea id="cre${i+1}" style="min-height:80px"></textarea>`).join('');
+    [1,2,3].forEach(i=>{const ta=tp.querySelector('#cre'+i);ta.value=W['t'+i]||'';ta.addEventListener('input',()=>{W['t'+i]=ta.value;save();checkAll()})})}
+};
+
+function buildWork(box){const key=box.dataset.work;const W=S[key];
+  box.innerHTML=`<div class="worktabs" role="tablist">${['text','draw','photo'].map(m=>`<button type="button" role="tab" data-mode="${m}" aria-selected="false">${ICONS[m]}${TAB[m]}</button>`).join('')}</div>
+  <div class="workbody"><div data-pane="text"></div>
+   <div data-pane="draw" hidden><div class="padtools">${['#2B1F4A','#3B7BFF','#E5484D','#1F9D63'].map((c,i)=>`<button type="button" class="dot" data-color="${c}" style="background:${c}" aria-label="Колір ${i+1}" aria-pressed="${i===0}"></button>`).join('')}
+     <button type="button" class="tbtn" data-size="3" aria-pressed="true">Тонко</button><button type="button" class="tbtn" data-size="7" aria-pressed="false">Товсто</button><button type="button" class="tbtn" data-act="eraser" aria-pressed="false">Гумка</button><button type="button" class="tbtn" data-act="undo">Назад</button><button type="button" class="tbtn" data-act="clear">Очистити</button></div>
+     <canvas class="pad" width="1200" height="700" aria-label="Поле для письма олівцем"></canvas><p class="hint" style="margin:6px 0 0">Пиши пальцем, стилусом або мишкою, як у зошиті в клітинку. Дроби пиши стовпчиком.</p></div>
+   <div data-pane="photo" hidden><label class="drop"><input type="file" accept="image/*" multiple>Натисни, щоб сфотографувати або обрати фото<br><span class="hint">або перетягни файл сюди (до 3 фото)</span></label><div class="photos"></div></div></div>`;
+  TEXT_PANES[key](box.querySelector('[data-pane="text"]'),W);
+  const show=m=>{W.mode=m;save();box.querySelectorAll('[role=tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.mode===m)));box.querySelectorAll('[data-pane]').forEach(p=>p.hidden=p.dataset.pane!==m)};
+  box.querySelectorAll('[role=tab]').forEach(b=>b.onclick=()=>show(b.dataset.mode));show(W.mode||'text');
+  initPad(box,W);initPhotos(box,W)}
+
+function initPad(box,W){const cvp=box.querySelector('.pad'),c=cvp.getContext('2d');let color='#2B1F4A',size=3,eraser=false,drawing=false,lp=null;const hist=[];
+  if(W.drawing){const im=new Image();im.onload=()=>c.drawImage(im,0,0);im.src=W.drawing}
+  const pos=e=>{const r=cvp.getBoundingClientRect();return{x:(e.clientX-r.left)*cvp.width/r.width,y:(e.clientY-r.top)*cvp.height/r.height}};
+  const blank=()=>{const d=c.getImageData(0,0,cvp.width,cvp.height).data;for(let i=3;i<d.length;i+=16)if(d[i])return false;return true};
+  const commit=()=>{W.drawing=blank()?'':cvp.toDataURL('image/png');save();checkAll()};
+  cvp.addEventListener('pointerdown',e=>{e.preventDefault();cvp.setPointerCapture(e.pointerId);drawing=true;lp=pos(e);hist.push(c.getImageData(0,0,cvp.width,cvp.height));if(hist.length>20)hist.shift();
+    c.globalCompositeOperation=eraser?'destination-out':'source-over';c.beginPath();c.arc(lp.x,lp.y,(eraser?size*4:size)/2,0,7);c.fillStyle=color;c.fill()});
+  cvp.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);c.globalCompositeOperation=eraser?'destination-out':'source-over';c.strokeStyle=color;c.lineWidth=eraser?size*4:size;c.lineCap='round';c.lineJoin='round';c.beginPath();c.moveTo(lp.x,lp.y);c.lineTo(p.x,p.y);c.stroke();lp=p});
+  const up=()=>{if(drawing){drawing=false;c.globalCompositeOperation='source-over';commit()}};cvp.addEventListener('pointerup',up);cvp.addEventListener('pointercancel',up);
+  box.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{color=d.dataset.color;eraser=false;box.querySelectorAll('.dot').forEach(x=>x.setAttribute('aria-pressed',String(x===d)));box.querySelector('[data-act=eraser]').setAttribute('aria-pressed','false')});
+  box.querySelectorAll('[data-size]').forEach(d=>d.onclick=()=>{size=+d.dataset.size;box.querySelectorAll('[data-size]').forEach(x=>x.setAttribute('aria-pressed',String(x===d)))});
+  box.querySelector('[data-act=eraser]').onclick=e=>{eraser=!eraser;e.currentTarget.setAttribute('aria-pressed',String(eraser))};
+  box.querySelector('[data-act=undo]').onclick=()=>{const h=hist.pop();if(h){c.putImageData(h,0,0);commit()}};
+  box.querySelector('[data-act=clear]').onclick=()=>{hist.push(c.getImageData(0,0,cvp.width,cvp.height));c.clearRect(0,0,cvp.width,cvp.height);commit()}}
+
+function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=rej;fr.onload=()=>{const im=new Image();im.onerror=rej;im.onload=()=>{const M=1400;const k=Math.min(1,M/Math.max(im.width,im.height));const w=Math.round(im.width*k),h=Math.round(im.height*k);const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);res(c.toDataURL('image/jpeg',0.82))};im.src=fr.result};fr.readAsDataURL(file)})}
+function initPhotos(box,W){const drop=box.querySelector('.drop'),inp=drop.querySelector('input'),grid=box.querySelector('.photos');
+  const render=()=>{grid.innerHTML=W.photos.map((p,i)=>`<div class="photo"><img src="${p}" alt="Фото ${i+1}"><button type="button" data-del="${i}">Видалити</button></div>`).join('');grid.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{W.photos.splice(+b.dataset.del,1);render();save();checkAll()})};
+  const add=async files=>{for(const f of files){if(!f.type.startsWith('image/'))continue;if(W.photos.length>=3){toast('Можна додати до 3 фото');break}try{W.photos.push(await compress(f))}catch(e){toast('Це фото не вдалося відкрити. Спробуй інше')}}render();save();checkAll()};
+  inp.onchange=()=>{add(Array.from(inp.files));inp.value=''};
+  drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('over')});drop.addEventListener('dragleave',()=>drop.classList.remove('over'));
+  drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('over');add(Array.from(e.dataTransfer.files))});render()}
+$$('[data-work]').forEach(buildWork);
+
+/* ---------------- checks ---------------- */
+const has=w=>(w.text&&w.text.trim().length>=40)||!!w.drawing||(w.photos&&w.photos.length>0);
+const KEYS=['pea','millet','thread'];
+function setMark(id,state,title){const m=$('#'+id);if(!m)return;m.className='mark'+(state?' '+state:'');m.title=title||''}
+function checkAll(){
+  award(0,!!(S.student.name.trim()&&S.student.cls.trim()));
+  const st1=$('#st1');if(S.orderDone){st1.textContent='Чудово! Ти знаєш секрет методу рядів';st1.classList.add('ok');award(1)}
+  // price
+  const pv=num(S.price.ans);const pmm=S.price.unit==='см'?pv*10:pv;const pOk=isFinite(pmm)&&Math.abs(pmm-1)<0.001;
+  setMark('mPrice',isFinite(pv)?(pOk?'ok':'bad'):'',pOk?'Лінійку розчакловано!':'Перевір: (2 − 1) см : 10');
+  if(pOk)award(2);
+  // rows
+  KEYS.forEach((k,i)=>{const r=S.rows[i];const l=num(r.l),n=num(r.n);const cnt=S.bench.counts[k];const st=$('#st'+(3+i));
+    let lOk=false,nOk=false;
+    if(cnt>0){const tl=trueL(k);lOk=isFinite(l)&&Math.abs(l-tl)<=1.2;nOk=isFinite(n)&&n===cnt;
+      setMark('mkl'+i,isFinite(l)?(lOk?'ok':'bad'):'',lOk?'Точно!':'Збільш лупою кінець ряду й подивись ще раз');
+      setMark('mkn'+i,isFinite(n)?(nOk?'ok':'bad'):'',nOk?'Правильно':'Порахуй ще раз');}
+    else{lOk=isFinite(l)&&l>0;nOk=isFinite(n)&&n>0;setMark('mkl'+i,'');setMark('mkn'+i,'')}
+    if(lOk&&nOk){st.textContent=cnt>0?'Виміряно точно! Запис уже в королівській книзі':'Записано твої домашні виміри';st.classList.add('ok');award(3+i)}
+    else{st.classList.remove('ok');st.textContent=cnt>0?'Перевір значення з червоним знаком':'Чекаю на твої виміри'}
+  });
+  // d
+  let dOk=0;S.rows.forEach((r,i)=>{const l=num(r.l),n=num(r.n),d=num(r.d);let s='';if(isFinite(d)&&isFinite(l)&&n>0){const ok=Math.abs(d-l/n)<=0.06;s=ok?'ok':'bad';if(ok)dOk++}
+    setMark('mkd'+i,s,s==='ok'?'Обчислено правильно':'Перевір: d = l : n');setMark('mr'+i,s);const nm=$('#fnm'+i);if(nm)nm.textContent=r.name});
+  const st6=$('#st6');if(dOk===3){st6.textContent='Усі діаметри обчислено правильно!';st6.classList.add('ok');award(6)}else{st6.classList.remove('ok');st6.textContent=`Правильних обчислень: ${dOk} з 3`}
+  award(7,has(S.concl));
+  // q3: 100 mm / 25 = 4 mm on photo -> 4/50000 = 8e-5 mm
+  const qv=sci(S.q.ans);const qmm=S.q.unit==='м'?qv*1000:S.q.unit==='нм'?qv/1e6:qv;const target=100/MOL_N/50000;const q3Ok=isFinite(qmm)&&Math.abs(qmm-target)/target<0.06;
+  setMark('mQ3',isFinite(qv)?(q3Ok?'ok':'bad'):'',q3Ok?'Сова задоволена!':'Перевір: скільки молекул на 10 см?');
+  award(8,S.q.q1==='25'&&(S.q.q1why||'').trim().length>5&&(S.q.q2||'').trim().length>10&&q3Ok);
+  const cr=S.creative;const crT=[cr.t1,cr.t2,cr.t3].filter(t=>(t||'').trim().length>=15).length;
+  award(9,crT>=3||!!cr.drawing||cr.photos.length>0);
+  renderChecklist()}
+function renderChecklist(){const it=[['Ім\'я та клас',0],['Метод рядів',1],['Ціна поділки',2],['Горошина',3],['Пшонинка',4],['Нитка',5],['Діаметри обчислено',6],['Висновок',7],['Контрольні запитання',8],['Творче завдання',9]];
+  $('#checklist').innerHTML=it.map(([t,i])=>`<li><span class="mark ${S.stars[i]?'ok':''}"></span>${t}</li>`).join('')}
+
+/* ---------------- PDF ---------------- */
+function gridComposite(u){return new Promise(res=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.strokeStyle='#d6e3f5';x.lineWidth=1;const s=c.width/60;for(let g=0;g<c.width;g+=s){x.beginPath();x.moveTo(g,0);x.lineTo(g,c.height);x.stroke()}for(let g=0;g<c.height;g+=s){x.beginPath();x.moveTo(0,g);x.lineTo(c.width,g);x.stroke()}x.drawImage(im,0,0);res(c.toDataURL('image/jpeg',0.9))};im.onerror=()=>res('');im.src=u})}
+async function buildReport(){const r=$('#report');const st=S.student;const v=x=>esc(x||'');const date=todayStr();
+  const imgs=async(W,t)=>{let o='';if(W.drawing){const g=await gridComposite(W.drawing);if(g)o+=`<div class="rb"><p><b>${t}: записи олівцем</b></p><img src="${g}"></div>`}W.photos.forEach((p,i)=>o+=`<div class="rb"><p><b>${t}: фото ${i+1}</b></p><img src="${p}"></div>`);return o};
+  const P=S.price;
+  let h=`<div class="rb"><p>Клас: <b>${v(st.cls)||'______'}</b> &nbsp; Прізвище та ім'я: <b>${v(st.name)||'________________'}</b> &nbsp; Дата: <b>${date}</b></p>
+   <h1 style="margin-top:8px">ЛАБОРАТОРНА РОБОТА № 3</h1>
+   <p><b>Тема.</b> Вимірювання розмірів малих тіл.</p><p><b>Мета:</b> визначити методом рядів діаметр горошини, діаметр пшоняного зернятка, товщину нитки.</p>
+   <p><b>Обладнання:</b> лінійка; дрібні тіла (горох, пшоно); олівець; нитка; інтерактивна «Чарівна майстерня».</p><p><b>Чарівних зірок:</b> ${S.stars.filter(Boolean).length} з 10</p></div>
+   <div class="rb"><h2>Підготовка до експерименту</h2><p>Ціна поділки шкали лінійки:</p>
+   ${(P.a||P.b||P.N||P.res)?`<p style="font-size:16px">C<sub>лін</sub> = (${v(P.b)||'b'} − ${v(P.a)||'a'}) : ${v(P.N)||'N'} = ${v(P.res)||'?'} см</p>`:''}
+   <p style="font-size:16px"><b>C<sub>лін</sub> = ${v(P.ans)||'____'} ${v(P.unit)}</b></p></div>`;
+  h+=await imgs(P,'Ціна поділки');
+  h+=`<div class="rb"><h2>Таблиця результатів</h2><table><tr><th>№ досліду</th><th>Назва тіла</th><th>Довжина ряду l, мм</th><th>Кількість тіл (витків) у ряді n</th><th>Діаметр (товщина) d = l/n, мм</th></tr>${S.rows.map((x,i)=>`<tr><td>${i+1}</td><td>${v(x.name)}</td><td>${v(x.l)}</td><td>${v(x.n)}</td><td>${v(x.d)}</td></tr>`).join('')}</table></div>`;
+  const fr=S.rows.map((x,i)=>(x.fl||x.fn||x.d)?`<p style="font-size:16px">${v(x.name)}: d<sub>${i+1}</sub> = ${v(x.fl)||'l'} : ${v(x.fn)||'n'} ≈ ${v(x.d)||'?'} мм</p>`:'').join('');
+  h+=`<div class="rb"><h2>Обчислення діаметрів</h2><p>d = l / n</p>${fr}</div>`;h+=await imgs(S.calc,'Обчислення');
+  h+=`<div class="rb"><h2>Аналіз експерименту та його результатів (висновок)</h2>${(S.concl.text||'').trim()?`<div class="ans">${v(S.concl.text)}</div>`:'<p>(див. записи нижче)</p>'}</div>`;h+=await imgs(S.concl,'Висновок');
+  const q=S.q;h+=`<div class="rb"><h2>Контрольні запитання</h2>
+   <p><b>1.</b> Точніше визначив учень: <b>${q.q1==='25'?'другий (25 пшонин)':q.q1==='5'?'перший (5 пшонин)':'—'}</b></p>${(q.q1why||'').trim()?`<div class="ans">${v(q.q1why)}</div>`:''}
+   <p style="margin-top:8px"><b>2.</b> Чому розміри є середніми?</p><div class="ans">${v(q.q2)||' '}</div>
+   <p style="margin-top:8px"><b>3.</b> Діаметр молекули: <b>d = ${v(q.ans)||'____'} ${v(q.unit)}</b></p>${(S.q3.text||'').trim()?`<div class="ans">${v(S.q3.text)}</div>`:''}</div>`;
+  h+=await imgs(S.q3,'Запитання 3');
+  const cr=S.creative;if(cr.t1||cr.t2||cr.t3||cr.drawing||cr.photos.length){h+=`<div class="rb"><h2>Творче завдання</h2>${CRE_Q.map((qq,i)=>`<p style="margin-top:6px"><b>${esc(qq)}</b></p><div class="ans">${v(cr['t'+(i+1)])||' '}</div>`).join('')}</div>`;h+=await imgs(cr,'Творче завдання')}
+  r.innerHTML=h;await Promise.all(Array.from(r.querySelectorAll('img')).map(im=>im.complete?1:new Promise(ok=>{im.onload=im.onerror=ok})));return r}
+
+async function makePdf(){const msg=$('#pdfMsg'),btn=$('#btnPdf');
+  if(!window.html2canvas||!window.jspdf){msg.textContent='Не завантажилися інструменти для PDF. Перевір інтернет і онови сторінку.';return}
+  btn.disabled=true;msg.textContent='Міліметрик переписує роботу в сувій…';
+  try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;const r=await buildReport();
+    const {jsPDF}=window.jspdf;const pdf=new jsPDF({unit:'mm',format:'a4',orientation:'p'});const PW=210,PH=297,M=10,CW=PW-2*M;let y=M;
+    for(const b of r.querySelectorAll('.rb')){const can=await html2canvas(b,{scale:2,backgroundColor:'#ffffff',logging:false});let h=can.height*CW/can.width,w=CW;if(h>PH-2*M){const k=(PH-2*M)/h;h*=k;w*=k}if(y+h>PH-M){pdf.addPage();y=M}pdf.addImage(can.toDataURL('image/jpeg',0.88),'JPEG',M+(CW-w)/2,y,w,h);y+=h}
+    r.innerHTML='';const blob=pdf.output('blob');
+    const nm=(S.student.name||'учень').trim().replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,'_');const fname=`Лабораторна_3_${nm}${S.student.cls?'_'+S.student.cls.replace(/[\\/:*?"<>|\s]+/g,''):''}.pdf`;
+    let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){dl=null}
+    if(dl){try{await dl.save({filename:fname,data:blob});msg.textContent='Готово! Тепер відкрий Classroom і прикріпи цей PDF до завдання.';$('#finalBubble').textContent='Ура! Королівство врятовано, а робота збережена. Не забудь натиснути «Здати» в Classroom!'}
+      catch(e){msg.textContent=e&&e.code==='declined'?'Збереження скасовано. Натисни кнопку ще раз, коли будеш готовий.':'Не вдалося зберегти файл тут. Спробуй відкрити сторінку в браузері на комп\'ютері.'}}
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);msg.textContent='Якщо файл не з\'явився в «Завантаженнях», відкрий сторінку в Chrome на комп\'ютері й натисни ще раз.'}
+  }catch(e){console.error(e);msg.textContent='Щось пішло не так під час створення PDF. Спробуй ще раз.'}finally{btn.disabled=false}}
+$('#btnPdf').onclick=makePdf;
+$('#btnWipe').onclick=()=>{$('#wipeConfirm').hidden=false};$('#wipeNo').onclick=()=>{$('#wipeConfirm').hidden=true};
+$('#wipeYes').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
+
+/* ---------------- boot ---------------- */
+const onResize=()=>{bresize();drawMol();$('#zoom').max=fmt(maxZoom(),1).replace(',','.')};
+window.addEventListener('resize',onResize);if(window.ResizeObserver){new ResizeObserver(()=>{bresize()}).observe(bc);new ResizeObserver(()=>drawMol()).observe($('#mol'))}
+onResize();updCount();renderStars();checkAll();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{drawBench();drawMol()});
+})();
+</script>
+
+</body></html>
